@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    id("kotlin-parcelize")
+    id("com.diffplug.spotless")
 }
 
 android {
@@ -10,7 +12,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 21
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -21,7 +23,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -51,14 +53,19 @@ android {
         implementation(libs.logging.interceptor)
 
         // compose
-        implementation(libs.androidx.activity.compose.v161)
+        implementation(libs.androidx.activity.compose)
         implementation(libs.ui)
         implementation(libs.androidx.lifecycle.viewmodel.compose)
         implementation(libs.androidx.navigation.compose)
         implementation(libs.ui.tooling.preview)
         implementation(libs.ui.tooling)
-        implementation(libs.androidx.material)
+
+        //  implementation(libs.androidx.material)
         implementation(libs.androidx.foundation)
+        implementation(libs.androidx.constraintlayout.compose)
+        implementation(libs.androidx.compose.material3.material3)
+        implementation(libs.accompanist.systemuicontroller)
+        implementation(libs.androidx.foundation.layout.android)
 
         // room
         ksp(libs.androidx.room.compiler)
@@ -67,7 +74,33 @@ android {
     }
 }
 
+spotless {
+    kotlin {
+        target("**/*.kt") // Applies to all Kotlin files
+        ktlint("0.50.0") // Ensure you use a compatible version of KtLint
+        //  licenseHeaderFile(rootProject.file("spotless.license.kt")) // Optional: License header
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
+
+    kotlinGradle {
+        target("*.gradle.kts") // Applies to Gradle Kotlin DSL files
+        ktlint()
+    }
+
+    format("xml") {
+        target("**/*.xml")
+        indentWithSpaces()
+        trimTrailingWhitespace()
+    }
+
+    format("misc") {
+        target("*.md", "*.yaml", "*.yml", ".gitignore")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+// apply(from = rootProject.file("gradle/spotless-configuration.gradle.kts"))
 apply(from = rootProject.file("gradle/publish-package.gradle.kts"))
-
-
-

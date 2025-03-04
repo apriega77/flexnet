@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+  //  id("kotlin-kapt")
 }
 
 android {
@@ -43,11 +46,6 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
@@ -67,5 +65,31 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(project(":noop-mode"))
+
+    // RETROFIT
+    implementation(libs.retrofit)
+
+    //GSON
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
+
+    // LOGGING for debug app
+    implementation(libs.logging.interceptor)
+
+    // Scopes
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+
+    // HILT - DI
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
+    // COROUTINES
+    implementation(libs.kotlinx.coroutines.android)
+//    debugApi("com.flexnet:debug-mode:1.0.1")
+//    releaseApi("com.flexnet:noop-mode:1.0.1")
+    implementation(project(":debug-mode"))
 }

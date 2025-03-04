@@ -1,6 +1,7 @@
 package com.flexnet.presentation.feature
 
 internal enum class FlexNetNav(val route: String) {
-    LIST("/list"),
+    MAIN("/main"),
     ADD("/add"),
+    DETAIL("/detail"),
 }

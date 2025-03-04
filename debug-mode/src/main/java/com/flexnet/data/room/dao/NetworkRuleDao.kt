@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
-import com.flexnet.data.room.entity.NetworkRuleEntity
+import com.flexnet.data.room.entity.rule.NetworkRuleEntity
 
 @Dao
 internal interface NetworkRuleDao {

@@ -1,6 +1,6 @@
 package com.flexnet.presentation.foundation
 
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 
 @Composable
@@ -8,7 +8,7 @@ internal fun FlexNetTheme(
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
-        colors = FlexNetColorScheme,
+        colorScheme = FlexNetColorScheme,
         typography = FlexNetTypography,
         shapes = FlexNetShape,
     ) {

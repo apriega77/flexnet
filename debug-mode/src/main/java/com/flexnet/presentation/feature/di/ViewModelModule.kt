@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.flexnet.presentation.base.ViewModelKey
 import com.flexnet.presentation.feature.FlexNetViewModel
 import com.flexnet.presentation.feature.add.AddRuleViewModel
-import com.flexnet.presentation.feature.list.NetworkRulesViewModel
+import com.flexnet.presentation.feature.httpinspector.HttpInspectorViewModel
+import com.flexnet.presentation.feature.rules.NetworkRulesViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -25,4 +26,9 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AddRuleViewModel::class)
     abstract fun bindAddRuleViewModel(viewModel: AddRuleViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(HttpInspectorViewModel::class)
+    abstract fun bindHttpInspectorViewModel(viewModel: HttpInspectorViewModel): ViewModel
 }

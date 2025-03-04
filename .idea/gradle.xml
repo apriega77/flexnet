@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/debug-mode" />
+            <option value="$PROJECT_DIR$/noop-mode" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

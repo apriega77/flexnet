@@ -1,10 +1,9 @@
 package com.flexnet.presentation.feature.add
 
-import android.content.ClipboardManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.flexnet.domain.model.Method
 import com.flexnet.domain.model.NetworkRule
-import com.flexnet.domain.repository.ClipboardRepository
 import com.flexnet.domain.repository.NetworkRuleRepository
 import com.flexnet.presentation.feature.toIntOrZero
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +19,6 @@ import javax.inject.Inject
 
 internal class AddRuleViewModel @Inject constructor(
     private val networkRuleRepository: NetworkRuleRepository,
-    private val clipboardRepository: ClipboardRepository,
 ) :
     ViewModel() {
 
@@ -96,24 +94,37 @@ internal class AddRuleViewModel @Inject constructor(
                 }
 
                 is AddRuleEvent.PasteClipboard -> {
-                    processClipboard(event.clipboard, lastState)
                 }
             }
         }
     }
 
     private fun setArgs(event: AddRuleEvent.SetArgs) {
-        if (event.networkRule != null) {
-            _state.value = AddRuleState.Detail(
-                idState = event.networkRule.id,
-                titleState = event.networkRule.title,
-                isActiveState = event.networkRule.isActive,
-                urlState = event.networkRule.url,
-                methodState = event.networkRule.method,
-                httpCodeState = event.networkRule.httpCode.toString(),
-                responseBodyState = event.networkRule.responseBody,
-            )
+        val newState = when (event.addRuleArgs) {
+            is AddRuleArgs.Add -> {
+                AddRuleState.Add(
+                    titleState = event.addRuleArgs.networkRule?.title ?: "",
+                    isActiveState = event.addRuleArgs.networkRule?.isActive ?: true,
+                    urlState = event.addRuleArgs.networkRule?.url ?: "",
+                    methodState = event.addRuleArgs.networkRule?.method ?: Method.GET,
+                    httpCodeState = (event.addRuleArgs.networkRule?.httpCode ?: "").toString(),
+                    responseBodyState = event.addRuleArgs.networkRule?.responseBody ?: "",
+                )
+            }
+
+            is AddRuleArgs.Detail -> {
+                AddRuleState.Detail(
+                    idState = event.addRuleArgs.networkRule.id,
+                    titleState = event.addRuleArgs.networkRule.title,
+                    isActiveState = event.addRuleArgs.networkRule.isActive,
+                    urlState = event.addRuleArgs.networkRule.url,
+                    methodState = event.addRuleArgs.networkRule.method,
+                    httpCodeState = event.addRuleArgs.networkRule.httpCode.toString(),
+                    responseBodyState = event.addRuleArgs.networkRule.responseBody,
+                )
+            }
         }
+        _state.value = newState
     }
 
     private fun saveRule() {
@@ -142,26 +153,6 @@ internal class AddRuleViewModel @Inject constructor(
             if (state.value is AddRuleState.Detail) {
                 state.value.let { networkRuleRepository.deleteRule((state.value as AddRuleState.Detail).toNetworkRule()) }
                 effect.emit(AddRuleEffect.PopBackToNetworkRulesScreen)
-            }
-        }
-    }
-
-    private fun processClipboard(clipboardManager: ClipboardManager, lastState: AddRuleState) {
-        val clipText = clipboardManager.primaryClip?.getItemAt(0)?.text.toString()
-        val networkRule = clipboardRepository.getDataFromClipboard(clipText)
-
-        if (networkRule != null) {
-            _state.value = lastState.copyValue(
-                titleState = lastState.titleState,
-                isActiveState = lastState.isActiveState,
-                urlState = networkRule.url,
-                methodState = networkRule.method,
-                httpCodeState = networkRule.httpCode.toString(),
-                responseBodyState = networkRule.responseBody,
-            )
-        } else {
-            viewModelScope.launch {
-                effect.emit(AddRuleEffect.ShowSnackBar("Data Not Valid"))
             }
         }
     }

@@ -2,7 +2,6 @@ package com.flexnet.presentation.feature.add
 
 import android.content.ClipboardManager
 import com.flexnet.domain.model.Method
-import com.flexnet.domain.model.NetworkRule
 
 internal sealed interface AddRuleState {
     val idState: Int
@@ -82,7 +81,7 @@ internal sealed interface AddRuleState {
 }
 
 internal sealed interface AddRuleEvent {
-    data class SetArgs(val networkRule: NetworkRule?) :
+    data class SetArgs(val addRuleArgs: AddRuleArgs) :
         AddRuleEvent
 
     data class OnTitleChange(val text: String) : AddRuleEvent
@@ -98,6 +97,6 @@ internal sealed interface AddRuleEvent {
 }
 
 internal sealed interface AddRuleEffect {
-    object PopBackToNetworkRulesScreen : AddRuleEffect
+    data object PopBackToNetworkRulesScreen : AddRuleEffect
     data class ShowSnackBar(val text: String) : AddRuleEffect
 }

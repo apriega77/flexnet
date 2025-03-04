@@ -18,14 +18,13 @@ import javax.inject.Singleton
         Provide::class,
         ViewModelModule::class,
         ViewModelFactoryModule::class,
-        NotificationModule::class
+        NotificationModule::class,
     ],
 )
 internal interface FlexNetComponent {
     fun getFlexNetInterceptor(): FlexNetInterceptorImpl
 
     fun getNotificationHelper(): NotificationHelper
-
 
     @Component.Factory
     interface Factory {
